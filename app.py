@@ -37,22 +37,22 @@ class Signin(db.Model):
 def truncate(text, length):
     return text[:length] + "..." if len(text) > length else text
 
-def content_based_recommendations(data, item_name, top_n=10):
-    if item_name not in data['Name'].values:
+def recommend(product, n):
+    if product not in train_data['Name'].values:
         return pd.DataFrame()
 
     tfidf = TfidfVectorizer(stop_words='english')
-    matrix = tfidf.fit_transform(data['Tags'])
+    matrix = tfidf.fit_transform(train_data['Tags'])
     similarity = cosine_similarity(matrix, matrix)
 
-    idx = data[data['Name'] == item_name].index[0]
+    idx = train_data[train_data['Name'] == product].index[0]
 
     scores = list(enumerate(similarity[idx]))
-    scores = sorted(scores, key=lambda x: x[1], reverse=True)[1:top_n+1]
+    scores = sorted(scores, key=lambda x: x[1], reverse=True)[1:n+1]
 
     indices = [i[0] for i in scores]
 
-    return data.iloc[indices][['Name','ReviewCount','Brand','ImageURL','Rating']]
+    return train_data.iloc[indices][['Name','Brand','ReviewCount','Rating','ImageURL']]
 
 # ================= STATIC =================
 images = [
@@ -94,7 +94,7 @@ def recommendations():
             content_based_rec=pd.DataFrame()
         )
 
-    result = content_based_recommendations(train_data, product, int(n))
+    result = recommend(product, int(n))
 
     if result.empty:
         return render_template(

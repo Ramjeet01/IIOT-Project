@@ -1,147 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-commerce Intelligence System</title>
-
+    <title>Home</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-    <style>
-        body { background-color: #f8f9fa; }
-
-        .navbar {
-            box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
-        }
-
-        .video-background {
-            width: 100%;
-            height: 400px;
-            object-fit: cover;
-        }
-
-        .nav-link:hover {
-            color: orange !important;
-        }
-    </style>
 </head>
 
 <body>
 
-<!-- ================= NAVBAR ================= -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand mx-auto" href="#">Ecommerce Recommendation System</a>
-
-  <div class="collapse navbar-collapse justify-content-end">
-    <ul class="navbar-nav">
-
-      <!-- ✅ FIXED HOME -->
-      <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('home') }}">
-          <i class="fas fa-home"></i> Home
-        </a>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link" href="#" id="settingsLink">
-          <i class="fas fa-cog"></i> Settings
-        </a>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link btn btn-outline-primary mr-2" href="#" data-toggle="modal" data-target="#signupModal">
-          Sign Up
-        </a>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link btn btn-primary" href="#" data-toggle="modal" data-target="#signinModal">
-          Sign In
-        </a>
-      </li>
-
-    </ul>
-  </div>
+<!-- NAVBAR -->
+<nav class="navbar navbar-light bg-light">
+    <a class="navbar-brand mx-auto">Ecommerce AI</a>
+    <a href="/">Home</a>
 </nav>
 
-<!-- ================= VIDEO ================= -->
-<div class="carousel slide">
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <video class="video-background" autoplay loop muted>
-        <source src="{{ url_for('static', filename='v.mp4') }}" type="video/mp4">
-      </video>
-    </div>
-  </div>
-</div>
-
-<!-- ================= MAIN PAGE BUTTON ================= -->
+<!-- BUTTON -->
 <div class="text-center mt-5">
-  <!-- ✅ FIXED LINK -->
-  <a href="{{ url_for('main') }}" class="btn btn-primary btn-lg">
-    Go To Main Page
-  </a>
+    <a href="/main" class="btn btn-primary">Go To Main Page</a>
 </div>
 
-{% if signup_message %}
-<h5 class="text-center mt-3">{{ signup_message }}</h5>
-{% endif %}
-
-<!-- ================= PRODUCTS ================= -->
+<!-- PRODUCTS -->
 <div class="container mt-5">
-  <h2 class="text-center mb-4">Trending Products</h2>
-
-  <div class="row">
-
+    <div class="row">
     {% for index, product in trending_products.iterrows() %}
-    <div class="col-md-3 mb-4">
-
-      <div class="card">
-        <img src="{{ random_product_image_urls[index] }}" class="card-img-top" style="height:200px;">
-
-        <div class="card-body">
-          <h5>{{ truncate(product['Name'],12) }}</h5>
-          <p>Brand: {{ product['Brand'] }}</p>
-
-          <button class="btn btn-primary" data-toggle="modal" data-target="#modal{{ index }}">
-            Buy Now
-          </button>
+        <div class="col-md-3">
+            <div class="card">
+                <img src="{{ random_product_image_urls[index] }}" height="200">
+                <div class="card-body">
+                    <h5>{{ truncate(product['Name'],12) }}</h5>
+                    <p>{{ product['Brand'] }}</p>
+                    <p>₹ {{ random_price }}</p>
+                </div>
+            </div>
         </div>
-      </div>
-
-    </div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="modal{{ index }}">
-      <div class="modal-dialog">
-        <div class="modal-content">
-
-          <div class="modal-header">
-            <h5>{{ product['Name'] }}</h5>
-            <button class="close" data-dismiss="modal">&times;</button>
-          </div>
-
-          <div class="modal-body">
-            <p><b>Brand:</b> {{ product['Brand'] }}</p>
-            <p><b>Reviews:</b> {{ product['ReviewCount'] }}</p>
-            <p><b>Rating:</b> {{ product['Rating'] }}</p>
-            <p><b>Price:</b> ₹{{ random_price }}</p>
-          </div>
-
-        </div>
-      </div>
-    </div>
-
     {% endfor %}
-
-  </div>
+    </div>
 </div>
-
-<!-- ================= SCRIPTS ================= -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 </body>
 </html>
