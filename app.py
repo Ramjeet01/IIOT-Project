@@ -8,7 +8,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 app = Flask(__name__)
 
-# ================= SAFE FILE PATH =================
+# ================= PATH FIX =================
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 trending_products = pd.read_csv(os.path.join(BASE_DIR, "models/trending_products.csv"))
@@ -21,7 +21,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# ================= DATABASE MODELS =================
+# ================= MODELS =================
 class Signup(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100))
@@ -33,11 +33,10 @@ class Signin(db.Model):
     username = db.Column(db.String(100))
     password = db.Column(db.String(100))
 
-# ================= HELPER =================
+# ================= FUNCTIONS =================
 def truncate(text, length):
     return text[:length] + "..." if len(text) > length else text
 
-# ================= RECOMMENDATION =================
 def content_based_recommendations(data, item_name, top_n=10):
     if item_name not in data['Name'].values:
         return pd.DataFrame()
@@ -115,7 +114,7 @@ def recommendations():
 with app.app_context():
     db.create_all()
 
-# ================= PRODUCTION RUN =================
+# ================= RUN =================
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
